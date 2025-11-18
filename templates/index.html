@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Study Planner</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f5f5f5;
+    }
+
+    header {
+        background: #4a90e2;
+        color: #fff;
+        padding: 15px;
+        text-align: center;
+        font-size: 24px;
+    }
+
+    .container {
+        padding: 15px;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    /* カレンダー */
+    .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .day {
+        background: #fff;
+        padding: 10px;
+        min-height: 70px;
+        border-radius: 8px;
+        box-shadow: 0 0 5px #ccc;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .day:hover {
+        background: #e8f2ff;
+    }
+
+    .day-number {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .event {
+        margin-top: 5px;
+        padding: 3px 5px;
+        border-radius: 5px;
+        font-size: 12px;
+        color: #fff;
+    }
+
+    .event.study { background: #4a90e2; }
+    .event.private { background: #7dce82; }
+    .event.other { background: #d47fa6; }
+
+    /* モーダル */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 10;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        width: 90%;
+        max-width: 350px;
+        border-radius: 10px;
+    }
+
+    input, select, button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    /* スマホ最適化 */
+    @media (max-width: 600px) {
+        header {
+            font-size: 20px;
+        }
+        .day {
+            min-height: 60px;
+            padding: 8px;
+        }
+        .event {
+            font-size: 10px;
+        }
+    }
+</style>
+</head>
+
+<body>
+<header>Study Planner</header>
+
+<div class="container">
+
+    <h2>📅 カレンダー</h2>
+    <div id="calendar" class="calendar"></div>
+
+</div>
+
+<!-- モーダル：予定入力 -->
+<div id="eventModal" class="modal">
+    <div class="modal-content">
+        <h3>予定を追加</h3>
+        <p id="selectedDateText"></p>
+
+        <input type="text" id="eventTitle" placeholder="予定名" />
+        <input type="time" id="eventTime" />
+
+        <select id="eventType">
+            <option value="study">勉強</option>
+            <option value="private">プライベート</option>
+            <option value="other">その他</option>
+        </select>
+
+        <button onclick="saveEvent()">保存</button>
+        <button style="background:#ccc" onclick="closeModal()">閉じる</button>
+    </div>
+</div>
+
+<script>
+/* ========== カレンダー生成 ========== */
+const calendarElem = document.getElementById("calendar");
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth();
+let selectedDate = null;
+
+function loadCalendar() {
+    calendarElem.innerHTML = "";
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const days = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement("div");
+        empty.className = "day";
+        empty.style.visibility = "hidden";
+        calendarElem.appendChild(empty);
+    }
+
+    for (let d = 1; d <= days; d++) {
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "day";
+
+        dayDiv.innerHTML = `<div class="day-number">${d}</div>`;
+
+        const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
+        const events = loadEvents(dateKey);
+
+        events.forEach(ev => {
+            const evDiv = document.createElement("div");
+            evDiv.className = `event ${ev.type}`;
+            evDiv.textContent = `${ev.time} ${ev.title}`;
+            dayDiv.appendChild(evDiv);
+        });
+
+        dayDiv.onclick = () => openModal(dateKey);
+
+        calendarElem.appendChild(dayDiv);
+    }
+}
+
+/* ========== モーダル ========== */
+function openModal(date) {
+    selectedDate = date;
+    document.getElementById("selectedDateText").textContent = "日付：" + date;
+    document.getElementById("eventModal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("eventModal").style.display = "none";
+}
+
+/* ========== イベント保存（localStorage） ========== */
+function loadEvents(date) {
+    const data = JSON.parse(localStorage.getItem("events") || "{}");
+    return data[date] || [];
+}
+
+function saveEvent() {
+    const title = document.getElementById("eventTitle").value;
+    const time = document.getElementById("eventTime").value;
+    const type = document.getElementById("eventType").value;
+
+    if (!title || !time) {
+        alert("予定名と時間を入力してください");
+        return;
+    }
+
+    const data = JSON.parse(localStorage.getItem("events") || "{}");
+
+    if (!data[selectedDate]) data[selectedDate] = [];
+    data[selectedDate].push({ title, time, type });
+
+    localStorage.setItem("events", JSON.stringify(data));
+
+    closeModal();
+    loadCalendar();
+}
+
+loadCalendar();
+</script>
+
+</body>
+</html>
