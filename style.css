@@ -1,0 +1,194 @@
+/* ------------------------------
+   全体のスタイル設定
+------------------------------ */
+body {
+    font-family: "Noto Sans JP", "Hiragino Sans", sans-serif;
+    background: #f9f9ff;
+    margin: 0;
+    padding: 0;
+}
+
+/* ------------------------------
+   コンテナ
+------------------------------ */
+.container {
+    width: 90%;
+    max-width: 750px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px 30px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* ------------------------------
+   ヘッダー部分
+------------------------------ */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.date {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.tab {
+    border: none;
+    padding: 6px 15px;
+    border-radius: 20px;
+    background: #eee;
+    cursor: pointer;
+}
+.tab.active {
+    background: #e6ccff;
+    color: #7000b2;
+}
+
+.user-icon {
+    width: 50px;
+    border-radius: 50%;
+}
+
+/* ------------------------------
+   課題追加フォーム
+------------------------------ */
+.add-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.add-form input, .add-form button {
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 0.9em;
+}
+
+.add-form button {
+    background: #b197fc;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-form button:hover {
+    background: #9775fa;
+}
+
+/* ------------------------------
+   課題テーブル
+------------------------------ */
+.task-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.task-table th, .task-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+.task-table th {
+    background: #f5f0ff;
+    color: #444;
+}
+
+/* ------------------------------
+   完了ボタン
+------------------------------ */
+.done-btn {
+    background: #d0bfff;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.done-btn:hover {
+    background: #b197fc;
+    color: white;
+}
+
+/* ------------------------------
+   完了課題の切り替えスイッチ
+------------------------------ */
+.toggle {
+    margin-top: 25px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* スイッチ部分 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    margin-right: 8px;
+}
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #b197fc;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* ------------------------------
+   AI予測ボタン
+------------------------------ */
+.predict-btn {
+    margin-top: 25px;
+    background: #a5d8ff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.predict-btn:hover {
+    background: #74c0fc;
+}
+
+/* ---------------*
